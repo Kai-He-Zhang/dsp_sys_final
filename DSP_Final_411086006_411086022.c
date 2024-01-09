@@ -21,8 +21,8 @@ int sw3 = 0;
 int sw4 = 0;
 int L_output = -1;
 int R_output = -1;
-float keyboard_gain = 1.1; // ©ñ¤j¡BÁY¤p­¿²v
-float music_gain = 1.1;    // ©ñ¤j¡BÁY¤p­¿²v
+float keyboard_gain = 1.1; // æ”¾å¤§ã€ç¸®å°å€ç‡
+float music_gain = 1.1;    // æ”¾å¤§ã€ç¸®å°å€ç‡
 int pb1 = 0;
 int pb2 = 0;
 int pb3 = 0;
@@ -40,7 +40,7 @@ unsigned short digital = 15, old_digital = 15; // keyboard
 float f[9] = {262.0, 294.0, 330.0, 349.0, 392.0, 440.0, 494.0, 524.0, 588.0};
 float key_gain = 0.5;
 
-int mode = 0; // 0­ì¥»(ÀR­µ§ï)  1¦^­µ 2½ÕÅÜ 3Âoªi
+int mode = 0; // 0åŸæœ¬(éœéŸ³æ”¹)  1å›éŸ³ 2èª¿è®Š 3æ¿¾æ³¢
 // echo
 #define GAIN 0.6
 #define BUF_SIZE 2000
@@ -48,7 +48,7 @@ int L_buffer[BUF_SIZE], R_buffer[BUF_SIZE], LR_buffer[BUF_SIZE];
 int left_output_echo = 0, right_output_echo = 0, LR_output_echo = 0;
 int delayed = 0;
 int echo_i = 0;
-// ½ÕÅÜ
+// èª¿è®Š
 #define AM_N 20
 int L_baseband[AM_N] = {0};
 int R_baseband[AM_N] = {0};
@@ -60,7 +60,7 @@ short AM_amp = 1, AM_sample = 0;
 int L_AM_output, R_AM_output, LR_AM_output;
 float tmp;
 
-//Âoªi
+//æ¿¾æ³¢
 float fir_L[fir_N], fir_R[fir_N], fir_LR[fir_N];
 short fir_i;
 float fir_ynl = 0.0, fir_ynr = 0.0, fir_ynlr = 0.0;
@@ -77,25 +77,25 @@ int main(void)
 
     while (1)
     {
-        sw1 = Read_SW(1); // 0 ¥¿±`    or 1 reset
-        sw2 = Read_SW(2); // 0 ¹q¤lµ^ or 1 ­µ°T³B²z
+        sw1 = Read_SW(1); // 0 æ­£å¸¸    or 1 reset
+        sw2 = Read_SW(2); // 0 é›»å­ç´ or 1 éŸ³è¨Šè™•ç†
 
-        sw3 = Read_SW(3); // 0 ¨S¦³®ÄªG or 1 ±±¨î¼Ò¦¡
-        //       ¹q¤lµ^         ­µ°T³B²z
-        // PB 1  ¤jÁn           ¤jÁn
-        // PB 2  ¤pÁn           ¤pÁn
-        // PB 3  ¤Ékey          ¦^­µ
-        // PB 4  ­°key          ­ì­µ
-        sw4 = Read_SW(4); // 0 ¨S¦³®ÄªG or 1 ±±¨î¼Ò¦¡
-        //       ¹q¤lµ^        ­µ°T³B²z
-        // PB 1  sine          ¥ªÁn¹D¿é¥X
-        // PB 2  square        ¥kÁn¹D¿é¥X
-        // PB 3  sawtooth      ½ÕÅÜ
-        // PB 4  triangular    ­ì­µ
+        sw3 = Read_SW(3); // 0 æ²’æœ‰æ•ˆæœ or 1 æ§åˆ¶æ¨¡å¼
+        //       é›»å­ç´         éŸ³è¨Šè™•ç†
+        // PB 1  å¤§è²           å¤§è²
+        // PB 2  å°è²           å°è²
+        // PB 3  å‡key          å›éŸ³
+        // PB 4  é™key          åŸéŸ³
+        sw4 = Read_SW(4); // 0 æ²’æœ‰æ•ˆæœ or 1 æ§åˆ¶æ¨¡å¼
+        //       é›»å­ç´        éŸ³è¨Šè™•ç†
+        // PB 1  sine          å·¦è²é“è¼¸å‡º
+        // PB 2  square        å³è²é“è¼¸å‡º
+        // PB 3  sawtooth      èª¿è®Š
+        // PB 4  triangular    åŸéŸ³
 
         if (sw1 == 1)
         { // reset
-            // LCD Åã¥Ü reset
+            // LCD é¡¯ç¤º reset
             LCD_PUT_CMD(LCD_FIRST_LINE);
             LCD_PUT_CHAR(' ');
             LCD_PUT_CHAR(' ');
@@ -128,7 +128,7 @@ int main(void)
             Control_LED_OFF(2);
             Control_LED_OFF(3);
             Control_LED_OFF(4);
-            US_Delay(300000); // 0.3¬í
+            US_Delay(300000); // 0.3ç§’
             LCD_PUT_CMD(LCD_FIRST_LINE);
             LCD_PUT_CHAR(' ');
             LCD_PUT_CHAR(' ');
@@ -180,7 +180,7 @@ int main(void)
             if (sw2 == 0)
             { // keyboard
                 digital = Read_keypad();
-                switch (digital) // ¨C¶ôªO¤l³£¤£¤@¼Ë¡A­n´ú
+                switch (digital) // æ¯å¡Šæ¿å­éƒ½ä¸ä¸€æ¨£ï¼Œè¦æ¸¬
                 {
                 case 15:
                     row = 2 * 262.0 + f[0] * key_gain;
@@ -339,7 +339,7 @@ int main(void)
                         Control_LED_ON(4);
                     else
                         Control_LED_OFF(4);
-                    // Âoªi
+                    // æ¿¾æ³¢
                 }
                 else if (sw3 == 0 && sw4 == 0)
                 {
@@ -357,28 +357,28 @@ int main(void)
                 }
             }
             if(pb1 == 1){
-                // °{Ã{0.4¬í
+                // é–ƒçˆ0.4ç§’
                 pb1 = 0;
                 Control_LED_ON(1);
                 US_Delay(200000);
                 Control_LED_OFF(1);
             }
             if(pb2 == 1){
-                // °{Ã{0.4¬í
+                // é–ƒçˆ0.4ç§’
                 pb2 = 0;
                 Control_LED_ON(2);
                 US_Delay(200000);
                 Control_LED_OFF(2);
             }
             if(pb3 == 1){
-                // °{Ã{0.4¬í
+                // é–ƒçˆ0.4ç§’
                 pb3 = 0;
                 Control_LED_ON(3);
                 US_Delay(200000);
                 Control_LED_OFF(3);
             }
             if(pb4 == 1){
-                // °{Ã{0.4¬í
+                // é–ƒçˆ0.4ç§’
                 pb4 = 0;
                 Control_LED_ON(4);
                 US_Delay(200000);
@@ -394,7 +394,7 @@ interrupt void INT4_ISR(void)
     {
         if (DTMF_count < loop_time)
         {
-            // ¿ï¾Üªi«¬
+            // é¸æ“‡æ³¢å‹
             if (wave == 1) // sine
             {
                 sample = 10000 * (sin(2.0 * PI * DTMF_count * row / SAMPLING_FREQ));
@@ -468,18 +468,18 @@ interrupt void INT4_ISR(void)
         if (++echo_i >= BUF_SIZE)
             echo_i = 0;
 
-        // ¿é¥X
+        // è¼¸å‡º
         if (L_output == -1 && R_output == -1)
         {
             output_sample(0);
         }
         else if (L_output == -1 && R_output == 1)
         {
-            if (mode == 1) // ¦^­µ
+            if (mode == 1) // å›éŸ³
             {
                 output_right_sample((short)(right_output_echo*music_gain));
             }
-            else if (mode == 2) // ½ÕÅÜ
+            else if (mode == 2) // èª¿è®Š
             {
                 R_AM_output = carrier[AM_sample] + ((AM_amp * R_baseband[AM_sample] * carrier[AM_sample] / 10) >> 12);
                 output_right_sample((short)(AM_amp * R_AM_output*music_gain));
@@ -491,11 +491,11 @@ interrupt void INT4_ISR(void)
         }
         else if (L_output == 1 && R_output == -1)
         {
-            if (mode == 1) // ¦^­µ
+            if (mode == 1) // å›éŸ³
             {
                 output_left_sample((short)(left_output_echo*music_gain));
             }
-            else if (mode == 2) // ½ÕÅÜ
+            else if (mode == 2) // èª¿è®Š
             {
                 L_AM_output = carrier[AM_sample] + ((AM_amp * L_baseband[AM_sample] * carrier[AM_sample] / 10) >> 12);
                 output_left_sample((short)(AM_amp * L_AM_output*music_gain));
@@ -507,7 +507,7 @@ interrupt void INT4_ISR(void)
         }
         else if (L_output == 1 && R_output == 1)
         {
-            if (mode == 1) // ¦^­µ
+            if (mode == 1) // å›éŸ³
             {
                 output_sample((int)(LR_output_echo));
             }
@@ -523,8 +523,8 @@ interrupt void INT4_ISR(void)
 
 interrupt void INT5_ISR(void) // LED 1
 {
-    //       ¹q¤lµ^
-    // sw3 1  ¤jÁn
+    //       é›»å­ç´
+    // sw3 1  å¤§è²
     // sw4 1  sine
 
     if (sw1 == 0)
@@ -532,7 +532,7 @@ interrupt void INT5_ISR(void) // LED 1
         if (sw2 == 0)
         { // keyboard
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 1 çš„æ¨¡å¼
                 keyboard_gain += 0.2;
                 if (keyboard_gain > 2.5)
                     keyboard_gain = 2.5;
@@ -540,7 +540,7 @@ interrupt void INT5_ISR(void) // LED 1
 
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw4 = 1 çš„æ¨¡å¼
                 // sine wave
                 wave = 1;
                 keyboard_led_array[0] = 1;
@@ -549,22 +549,22 @@ interrupt void INT5_ISR(void) // LED 1
                 keyboard_led_array[3] = -1;
             }
         }
-        //       ­µ°T³B²z
-        // sw3 1  ¤jÁn
-        // sw4 1  ¥ªÁn¹D¿é¥X
+        //       éŸ³è¨Šè™•ç†
+        // sw3 1  å¤§è²
+        // sw4 1  å·¦è²é“è¼¸å‡º
 
         else if (sw2 == 1)
         { // music
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 1 çš„æ¨¡å¼
                 music_gain += 0.2;
                 if (music_gain > 2.5)
                     music_gain = 2.5;
                 pb1 = 1;
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 1 ªº¼Ò¦¡
-                // ±±¨î¥ªÁn¹D¿é¥X
+            { // æ§åˆ¶ sw4 = 1 çš„æ¨¡å¼
+                // æ§åˆ¶å·¦è²é“è¼¸å‡º
                 L_output *= -1;
                 music_led_array[0] *= -1;
             }
@@ -579,8 +579,8 @@ interrupt void INT5_ISR(void) // LED 1
 //-------------------------------
 interrupt void INT6_ISR(void) // LED 2
 {
-    //       ¹q¤lµ^
-    // sw3 2  ¤pÁn
+    //       é›»å­ç´
+    // sw3 2  å°è²
     // sw4 2  square
 
     if (sw1 == 0)
@@ -588,14 +588,14 @@ interrupt void INT6_ISR(void) // LED 2
         if (sw2 == 0)
         { // keyboard
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 2 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 2 çš„æ¨¡å¼
                 keyboard_gain -= 0.2;
                 if (keyboard_gain < 0.3)
                     keyboard_gain = 0.3;
                 pb2 = 1;
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 2 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw4 = 2 çš„æ¨¡å¼
                 // square wave
                 wave = 2;
                 keyboard_led_array[0] = -1;
@@ -604,26 +604,26 @@ interrupt void INT6_ISR(void) // LED 2
                 keyboard_led_array[3] = -1;
             }
         }
-        //       ­µ°T³B²z
-        // sw3 2  ¤pÁn
-        // sw4 2  ¥kÁn¹D¿é¥X
+        //       éŸ³è¨Šè™•ç†
+        // sw3 2  å°è²
+        // sw4 2  å³è²é“è¼¸å‡º
 
         else if (sw2 == 1)
         { // music
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 2 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 2 çš„æ¨¡å¼
                 music_gain -= 0.2;
                 if (music_gain < 0.3)
                     music_gain = 0.3;
-                // °{Ã{0.4¬í
+                // é–ƒçˆ0.4ç§’
                 Control_LED_ON(2);
                 //US_Delay(400000);
                 pb2 = 1;
                 Control_LED_OFF(2);
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 2 ªº¼Ò¦¡
-                // ±±¨î¥kÁn¹D¿é¥X
+            { // æ§åˆ¶ sw4 = 2 çš„æ¨¡å¼
+                // æ§åˆ¶å³è²é“è¼¸å‡º
                 R_output *= -1;
                 music_led_array[1] *= -1;
             }
@@ -634,8 +634,8 @@ interrupt void INT6_ISR(void) // LED 2
 
 interrupt void INT7_ISR(void)
 {
-    //       ¹q¤lµ^
-    // sw3 3  ¤Ékey
+    //       é›»å­ç´
+    // sw3 3  å‡key
     // sw4 3  sawtooth
 
     if (sw1 == 0)
@@ -643,14 +643,14 @@ interrupt void INT7_ISR(void)
         if (sw2 == 0)
         { // keyboard
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 1 çš„æ¨¡å¼
                 pb3 = 1;
                 key_gain += 0.5;
                 if (key_gain > 3)
                     key_gain = 3;
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw4 = 1 çš„æ¨¡å¼
                 // sawtooth wave
                 wave = 3;
                 keyboard_led_array[0] = -1;
@@ -659,20 +659,20 @@ interrupt void INT7_ISR(void)
                 keyboard_led_array[3] = -1;
             }
         }
-        //       ­µ°T³B²z
-        // sw3 3  ¦^­µ
-        // sw4 3  ½ÕÅÜ
+        //       éŸ³è¨Šè™•ç†
+        // sw3 3  å›éŸ³
+        // sw4 3  èª¿è®Š
 
         else if (sw2 == 1)
         { // music
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 1 çš„æ¨¡å¼
                 // echo led
                 mode = 1;
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 1 ªº¼Ò¦¡
-                // ½ÕÅÜ led
+            { // æ§åˆ¶ sw4 = 1 çš„æ¨¡å¼
+                // èª¿è®Š led
                 // music_led_array[2] *= -1;
                 mode = 2;
             }
@@ -683,8 +683,8 @@ interrupt void INT7_ISR(void)
 
 interrupt void INT8_ISR(void) // LED 4
 {
-    //       ¹q¤lµ^
-    // sw3 3  ­°key
+    //       é›»å­ç´
+    // sw3 3  é™key
     // sw4 3  triangular
 
     if (sw1 == 0)
@@ -692,14 +692,14 @@ interrupt void INT8_ISR(void) // LED 4
         if (sw2 == 0)
         { // keyboard
             if (sw3 == 1 && sw4 == 0)
-            { // ±±¨î sw3 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw3 = 1 çš„æ¨¡å¼
                 pb4 = 1;
                 key_gain -= 0.5;
                 if (key_gain < -2)
                     key_gain = -2;
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 1 ªº¼Ò¦¡
+            { // æ§åˆ¶ sw4 = 1 çš„æ¨¡å¼
                 // triangular wave
                 wave = 4;
                 keyboard_led_array[0] = -1;
@@ -708,9 +708,9 @@ interrupt void INT8_ISR(void) // LED 4
                 keyboard_led_array[3] = 1;
             }
         }
-        //       ­µ°T³B²z
-        // sw3 4  ­ì¥»
-        // sw4 4  ²vªi
+        //       éŸ³è¨Šè™•ç†
+        // sw3 4  åŸæœ¬
+        // sw4 4  ç‡æ³¢
 
         else if (sw2 == 1)
         { // music
@@ -719,8 +719,8 @@ interrupt void INT8_ISR(void) // LED 4
                 mode = 0;
             }
             else if (sw3 == 0 && sw4 == 1)
-            { // ±±¨î sw4 = 1 ªº¼Ò¦¡
-                // Âoªi
+            { // æ§åˆ¶ sw4 = 1 çš„æ¨¡å¼
+                // æ¿¾æ³¢
                 // music_led_array[3] *= -1;
                 mode = 3;
             }
